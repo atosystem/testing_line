@@ -41,6 +41,21 @@ function handleEvent(event) {
   return client.replyMessage(event.replyToken, echo);
 }
 
+
+app.get('/send',(req,res) =>{
+    let message = {
+        type: 'text',
+        text: 'Hello World!'
+      };
+    client.pushMessage("Ue521265b814673aaf5f56d1216979d54",message)
+    .then(() => {
+        console.log("Message pushed")
+    })
+    .catch((err) => {
+    // error handling
+    });
+})
+
 // listen on port
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
