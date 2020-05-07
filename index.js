@@ -50,6 +50,7 @@ app.get('/send',(req,res) =>{
     client.pushMessage("Ue521265b814673aaf5f56d1216979d54",message)
     .then(() => {
         console.log("Message pushed")
+        res.send("message sent")
     })
     .catch((err) => {
     // error handling
