@@ -53,6 +53,7 @@ app.get('/send',(req,res) =>{
         res.send("message sent")
     })
     .catch((err) => {
+        res.send("error pushing message")
     // error handling
     });
 })
