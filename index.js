@@ -7,7 +7,7 @@ const config = {
   channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
   channelSecret: process.env.CHANNEL_SECRET,
 };
-let state = 0
+let state = "0"
 // create LINE SDK client
 const client = new line.Client(config);
 
@@ -33,8 +33,8 @@ function handleEvent(event) {
     // ignore non-text-message event
     return Promise.resolve(null);
   }
-  if(event.message.text === "s"){
-    state = 1
+  if(event.message.text === "on" || event.message.text === "off"){
+    state =  event.message.text
     return client.replyMessage(event.replyToken, { type: 'text', text: "got it" });
   }else{
     // create a echoing text message
@@ -65,9 +65,10 @@ app.get('/send',(req,res) =>{
 
 
 app.get('/check',(req,res)=>{
-  if(state==1){
-    state = 0
-    res.send("1")
+  if(state!="0"){
+    old_state = state
+    state = "0"
+    res.send(old_state)
   }else{
     res.send("0")
   }
