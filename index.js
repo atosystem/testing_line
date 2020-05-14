@@ -35,12 +35,15 @@ function handleEvent(event) {
   }
   if(event.message.text === "s"){
     state = 1
-  }
-  // create a echoing text message
-  const echo = { type: 'text', text: event.message.text };
+    return client.replyMessage(event.replyToken, { type: 'text', text: "got it" });
+  }else{
+    // create a echoing text message
+    const echo = { type: 'text', text: event.message.text };
 
-  // use reply API
-  return client.replyMessage(event.replyToken, echo);
+    // use reply API
+    return client.replyMessage(event.replyToken, echo);
+  }
+  
 }
 
 
