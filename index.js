@@ -7,7 +7,7 @@ const config = {
   channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
   channelSecret: process.env.CHANNEL_SECRET,
 };
-
+let state = 0
 // create LINE SDK client
 const client = new line.Client(config);
 
@@ -33,7 +33,9 @@ function handleEvent(event) {
     // ignore non-text-message event
     return Promise.resolve(null);
   }
-
+  if(event.message.text === "s"){
+    state = 1
+  }
   // create a echoing text message
   const echo = { type: 'text', text: event.message.text };
 
@@ -58,6 +60,16 @@ app.get('/send',(req,res) =>{
     });
 })
 
+
+app.get('/check',(req,res)=>{
+  if(state==1){
+    state = 0
+    res.send("1")
+  }else{
+    res.send("0")
+  }
+
+})
 // listen on port
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
