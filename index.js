@@ -40,6 +40,7 @@ function handleEvent(event) {
   }else if(!isNaN(event.message.text)){
     temperature = Number(event.message.text)
     state = "settemp"
+    return client.replyMessage(event.replyToken, { type: 'text', text: "change temp" });
   }else{
     // create a echoing text message
     const echo = { type: 'text', text: event.message.text };
