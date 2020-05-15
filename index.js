@@ -15,7 +15,7 @@ const client = new line.Client(config);
 // create Express app
 // about Express itself: https://expressjs.com/
 const app = express();
-app.use(express.json({limit: '1000mb'}))
+// app.use(express.json({limit: '1000mb'}))
 // register a webhook handler with middleware
 // about the middleware, please refer to doc
 app.post('/callback', line.middleware(config), (req, res) => {
@@ -73,7 +73,7 @@ app.get('/check',(req,res)=>{
     let xx = [0x02, 0x20, 0xE0, 0x04, 0x00, 0x00, 0x00, 0x06, 0x02, 0x20, 0xE0, 0x04, 0x00, 0x31, 0x34, 0x80, 0xAF, 0x0D, 0x00, 0x06, 0x60, 0x40, 0x00, 0x81, 0x00, 0x04, 0xD2];
     let cmd_msg = {
       status:0,
-      state:xx
+      state : xx
     }
     res.send(JSON.stringify(cmd_msg))
   }else{
