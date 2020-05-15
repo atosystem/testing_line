@@ -8,6 +8,7 @@ const config = {
   channelSecret: process.env.CHANNEL_SECRET,
 };
 let state = "0"
+let temperature = 25
 // create LINE SDK client
 const client = new line.Client(config);
 
@@ -66,9 +67,12 @@ app.get('/send',(req,res) =>{
 
 app.get('/check',(req,res)=>{
   if(state!="0"){
-    old_state = state
+    // old_state = state
     state = "0"
-    res.send(old_state)
+
+    let xx = [0x02, 0x20, 0xE0, 0x04, 0x00, 0x00, 0x00, 0x06, 0x02, 0x20, 0xE0, 0x04, 0x00, 0x31, 0x34, 0x80, 0xAF, 0x0D, 0x00, 0x06, 0x60, 0x40, 0x00, 0x81, 0x00, 0x04, 0xD2];
+
+    res.send(JSON.stringify(xx))
   }else{
     res.send("0")
   }
