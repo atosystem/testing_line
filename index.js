@@ -77,7 +77,7 @@ app.get('/check',(req,res)=>{
   }
   if(state!="0"){
     // old_state = state
-    state = "0"
+    
     if(state==="on"){
       cmd_msg.state[26] = 0xCF //power off
     }else if(state==="off"){
@@ -85,7 +85,7 @@ app.get('/check',(req,res)=>{
     }else if(state==="settemp"){
       cmd_msg.state[14] = temperature*2
     }
-    
+    state = "0"
     
     res.send(JSON.stringify(cmd_msg))
   }else{
