@@ -37,6 +37,9 @@ function handleEvent(event) {
   if(event.message.text === "on" || event.message.text === "off"){
     state =  event.message.text
     return client.replyMessage(event.replyToken, { type: 'text', text: "got it" });
+  }else if(!isNaN(event.message.text)){
+    temperature = Number(event.message.text)
+    state = "settemp"
   }else{
     // create a echoing text message
     const echo = { type: 'text', text: event.message.text };
@@ -66,15 +69,23 @@ app.get('/send',(req,res) =>{
 
 
 app.get('/check',(req,res)=>{
+  let xx = [0x02, 0x20, 0xE0, 0x04, 0x00, 0x00, 0x00, 0x06, 0x02, 0x20, 0xE0, 0x04, 0x00, 0x31, 0x34, 0x80, 0xAF, 0x0D, 0x00, 0x06, 0x60, 0x40, 0x00, 0x81, 0x00, 0x04, 0xD2];
+  let cmd_msg = {
+    status:1,
+    state : xx
+  }
   if(state!="0"){
     // old_state = state
     state = "0"
-
-    let xx = [0x02, 0x20, 0xE0, 0x04, 0x00, 0x00, 0x00, 0x06, 0x02, 0x20, 0xE0, 0x04, 0x00, 0x31, 0x34, 0x80, 0xAF, 0x0D, 0x00, 0x06, 0x60, 0x40, 0x00, 0x81, 0x00, 0x04, 0xD2];
-    let cmd_msg = {
-      status:1,
-      state : xx
+    if(state==="on"){
+      cmd_msg.state[26] = 0xCF //power off
+    }else if(state==="off"){
+      cmd_msg.state[26] = 0xD0 //power off
+    }else if(state==="settemp"){
+      cmd_msg.state[14] = temperature*2
     }
+    
+    
     res.send(JSON.stringify(cmd_msg))
   }else{
     let cmd_msg = {
