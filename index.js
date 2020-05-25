@@ -102,14 +102,26 @@ app.get('/send',(req,res) =>{
 
 app.get('/check',(req,res)=>{
   let machine_id = req.query.id
-  console.log(`Check from client${machine_id}`)
+  console.log(`Check from client ${machine_id}`)
   if(cmds[machine_id].state)
   {
-    let msg_send = JSON.stringify(cmds[machine_id])
+    let cmd_msg = {
+      status:1,
+      state : cmds[machine_id].ir_state
+    }
+    let msg_send = JSON.stringify(cmd_msg)
     cmds[machine_id].state = 0
     cmds[machine_id].ir_state = []
     res.send(msg_send)
+  }else{
+    let cmd_msg = {
+      status:0,
+      state : []
+    }
+    let msg_send = JSON.stringify(cmd_msg)
+    res.send(msg_send)
   }
+  
 })
 
 // app.get('/check/2',(req,res)=>{
