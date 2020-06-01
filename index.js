@@ -15,7 +15,7 @@ const con = mysql.createConnection({
   host: "140.112.174.222",
   user: config.mysql_username,
   password: config.mysql_password,
-  database: "tbl_mks_control"
+  database: "db_mks_website"
 });
 
 let cmds = [
