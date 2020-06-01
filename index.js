@@ -42,6 +42,10 @@ let temperature = 25
 // create LINE SDK client
 const client = new line.Client(config);
 
+con.connect(function(err) {
+  if (err) throw err;
+  console.log("Mysql Connected!");
+})
 
 
 // create Express app
@@ -68,10 +72,10 @@ function handleEvent(event) {
     return Promise.resolve(null);
   }
   // INSERT INTO tbl_mks_control (line_uid,command) VALUES (1,"on");
-  con.connect(function(err) {
-    if (err) throw err;
-    console.log("Connected!");
+
+    
     let sql = `INSERT INTO tbl_mks_control (line_uid,command,raw) VALUES ('${event.source.userId}','${event.message.text}','${JSON.stringify(event)}');`;
+    
     con.query(sql, function (err, result) {
       if (err) throw err;
       console.log("line record inserted");
@@ -105,9 +109,7 @@ function handleEvent(event) {
         return client.replyMessage(event.replyToken, echo);
       }
     });
-  });
-
-  con.end()
+  
 }
 
 
