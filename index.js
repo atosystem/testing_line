@@ -1,12 +1,23 @@
 
 const line = require('@line/bot-sdk');
 const express = require('express');
+const mysql = require('mysql');
 
 // create LINE SDK config from env variables
 const config = {
   channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
   channelSecret: process.env.CHANNEL_SECRET,
+  mysql_username : process.env.msql_username,
+  mysql_password : process.env.msql_password
 };
+
+const con = mysql.createConnection({
+  host: "140.112.174.222",
+  user: config.mysql_username,
+  password: config.mysql_password,
+  database: "tbl_mks_control"
+});
+
 let cmds = [
   {
     state : 0,
@@ -31,6 +42,11 @@ let temperature = 25
 // create LINE SDK client
 const client = new line.Client(config);
 
+con.connect(function(err) {
+  if (err) throw err;
+  console.log("MySql Connected!");
+});
+
 // create Express app
 // about Express itself: https://expressjs.com/
 const app = express();
@@ -54,35 +70,46 @@ function handleEvent(event) {
     // ignore non-text-message event
     return Promise.resolve(null);
   }
-  if(event.message.text === "on" || event.message.text === "off"){
-    if(event.message.text === "on")
-    {
-      for (let i = 0; i < cmds.length; i++) {
-        cmds[i].state = 1
-        cmds[i].cmd = "on"
-        cmds[i].ir_state = on_state_24
+  // INSERT INTO tbl_mks_control (line_uid,command) VALUES (1,"on");
+  con.connect(function(err) {
+    if (err) throw err;
+    console.log("Connected!");
+    let sql = `INSERT INTO tbl_mks_control (line_uid,command,raw) VALUES ('${event.source.userId}','${event.message.text}','${JSON.stringify(event)}');`;
+    con.query(sql, function (err, result) {
+      if (err) throw err;
+      console.log("line record inserted");
+      if(event.message.text === "on" || event.message.text === "off"){
+        if(event.message.text === "on")
+        {
+          for (let i = 0; i < cmds.length; i++) {
+            cmds[i].state = 1
+            cmds[i].cmd = "on"
+            cmds[i].ir_state = on_state_24
+          }
+        }else{
+          for (let i = 0; i < cmds.length; i++) {
+            cmds[i].state = 1
+            cmds[i].cmd = "off"
+            cmds[i].ir_state = off_state
+          }
+        }
+        // state =  event.message.text
+        return client.replyMessage(event.replyToken, { type: 'text', text: "got your command" });
+      }else if(!isNaN(event.message.text)){
+        // temperature = Number(event.message.text)
+        // state = "settemp"
+        return client.replyMessage(event.replyToken, { type: 'text', text: "change temp" });
+      }else{
+        // create a echoing text message
+        // const echo = { type: 'text', text: event.message.text };
+        const echo = { type: 'text', text: "輸入規則\non來開冷氣\noff來關冷氣" };
+    
+        // use reply API
+        return client.replyMessage(event.replyToken, echo);
       }
-    }else{
-      for (let i = 0; i < cmds.length; i++) {
-        cmds[i].state = 1
-        cmds[i].cmd = "off"
-        cmds[i].ir_state = off_state
-      }
-    }
-    // state =  event.message.text
-    return client.replyMessage(event.replyToken, { type: 'text', text: "got it" });
-  }else if(!isNaN(event.message.text)){
-    temperature = Number(event.message.text)
-    state = "settemp"
-    return client.replyMessage(event.replyToken, { type: 'text', text: "change temp" });
-  }else{
-    // create a echoing text message
-    // const echo = { type: 'text', text: event.message.text };
-    const echo = { type: 'text', text: "輸入規則\non來開冷氣\noff來關冷氣" };
+    });
+  });
 
-    // use reply API
-    return client.replyMessage(event.replyToken, echo);
-  }
   
 }
 
