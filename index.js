@@ -42,10 +42,7 @@ let temperature = 25
 // create LINE SDK client
 const client = new line.Client(config);
 
-con.connect(function(err) {
-  if (err) throw err;
-  console.log("MySql Connected!");
-});
+
 
 // create Express app
 // about Express itself: https://expressjs.com/
