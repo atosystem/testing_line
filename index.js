@@ -112,6 +112,23 @@ function handleEvent(event) {
   
 }
 
+app.get('/switch/on',(req,res)=>{
+  for (let i = 0; i < cmds.length; i++) {
+    cmds[i].state = 1
+    cmds[i].cmd = "on"
+    cmds[i].ir_state = on_state_24
+  }
+  res.send("done")
+})
+
+app.get('/switch/off',(req,res)=>{
+  for (let i = 0; i < cmds.length; i++) {
+    cmds[i].state = 1
+    cmds[i].cmd = "off"
+    cmds[i].ir_state = off_state
+  }
+  res.send("done")
+})
 
 app.get('/send',(req,res) =>{
     let message = {
