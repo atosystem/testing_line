@@ -118,7 +118,7 @@ app.get('/switch/on',(req,res)=>{
     cmds[i].cmd = "on"
     cmds[i].ir_state = on_state_24
   }
-  res.send("done")
+  res.send("")
 })
 
 app.get('/switch/off',(req,res)=>{
@@ -127,7 +127,7 @@ app.get('/switch/off',(req,res)=>{
     cmds[i].cmd = "off"
     cmds[i].ir_state = off_state
   }
-  res.send("done")
+  res.send("")
 })
 
 app.get('/send',(req,res) =>{
