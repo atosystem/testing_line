@@ -116,7 +116,7 @@ app.get('/switch/on',(req,res)=>{
   for (let i = 0; i < cmds.length; i++) {
     cmds[i].state = 1
     cmds[i].cmd = "on"
-    cmds[i].ir_state = on_state_24
+    cmds[i].ir_state = on_state25
   }
   res.send("")
 })
