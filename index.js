@@ -73,7 +73,7 @@ function handleEvent(event) {
   }
   // INSERT INTO tbl_mks_control (line_uid,command) VALUES (1,"on");
 
-    /*
+    
     let sql = `INSERT INTO tbl_mks_control (line_uid,command,raw) VALUES ('${event.source.userId}','${event.message.text}','${JSON.stringify(event)}');`;
     
     con.query(sql, function (err, result) {
@@ -109,11 +109,11 @@ function handleEvent(event) {
         return client.replyMessage(event.replyToken, echo);
       }
     });
-    */
-   const echo = { type: 'text', text: "輸入規則\non來開冷氣\noff來關冷氣" };
+  return Promise.resolve(null); 
+  //  const echo = { type: 'text', text: "輸入規則\non來開冷氣\noff來關冷氣" };
     
-   // use reply API
-   return client.replyMessage(event.replyToken, echo);
+  //  // use reply API
+  //  return client.replyMessage(event.replyToken, echo);
   
 }
 
