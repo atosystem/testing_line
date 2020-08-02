@@ -74,46 +74,59 @@ function handleEvent(event) {
   // INSERT INTO tbl_mks_control (line_uid,command) VALUES (1,"on");
 
     
-    let sql = `INSERT INTO tbl_mks_control (line_uid,command,raw) VALUES ('${event.source.userId}','${event.message.text}','${JSON.stringify(event)}');`;
+  //   let sql = `INSERT INTO tbl_mks_control (line_uid,command,raw) VALUES ('${event.source.userId}','${event.message.text}','${JSON.stringify(event)}');`;
     
-    con.query(sql, function (err, result) {
-      if (err) throw err;
-      console.log("line record inserted");
-      if(event.message.text === "on" || event.message.text === "off"){
-        if(event.message.text === "on")
-        {
-          for (let i = 0; i < cmds.length; i++) {
-            cmds[i].state = 1
-            cmds[i].cmd = "on"
-            cmds[i].ir_state = on_state_24
-          }
-        }else{
-          for (let i = 0; i < cmds.length; i++) {
-            cmds[i].state = 1
-            cmds[i].cmd = "off"
-            cmds[i].ir_state = off_state
-          }
-        }
-        // state =  event.message.text
-        return client.replyMessage(event.replyToken, { type: 'text', text: "got your command" });
-      }else if(!isNaN(event.message.text)){
-        // temperature = Number(event.message.text)
-        // state = "settemp"
-        return client.replyMessage(event.replyToken, { type: 'text', text: "change temp" });
-      }else{
-        // create a echoing text message
-        // const echo = { type: 'text', text: event.message.text };
-        const echo = { type: 'text', text: "輸入規則\non來開冷氣\noff來關冷氣" };
+  //   con.query(sql, function (err, result) {
+  //     if (err) throw err;
+  //     console.log("line record inserted");
+  //     if(event.message.text === "on" || event.message.text === "off"){
+  //       if(event.message.text === "on")
+  //       {
+  //         for (let i = 0; i < cmds.length; i++) {
+  //           cmds[i].state = 1
+  //           cmds[i].cmd = "on"
+  //           cmds[i].ir_state = on_state_24
+  //         }
+  //       }else{
+  //         for (let i = 0; i < cmds.length; i++) {
+  //           cmds[i].state = 1
+  //           cmds[i].cmd = "off"
+  //           cmds[i].ir_state = off_state
+  //         }
+  //       }
+  //       // state =  event.message.text
+  //       return client.replyMessage(event.replyToken, { type: 'text', text: "got your command" });
+  //     }else if(!isNaN(event.message.text)){
+  //       // temperature = Number(event.message.text)
+  //       // state = "settemp"
+  //       return client.replyMessage(event.replyToken, { type: 'text', text: "change temp" });
+  //     }else{
+  //       // create a echoing text message
+  //       // const echo = { type: 'text', text: event.message.text };
+  //       const echo = { type: 'text', text: "輸入規則\non來開冷氣\noff來關冷氣" };
     
-        // use reply API
-        return client.replyMessage(event.replyToken, echo);
-      }
-    });
-  return Promise.resolve(null); 
+  //       // use reply API
+  //       return client.replyMessage(event.replyToken, echo);
+  //     }
+  //   });
+  // return Promise.resolve(null); 
   //  const echo = { type: 'text', text: "輸入規則\non來開冷氣\noff來關冷氣" };
-    
+  if(event.message.text === "open" )
+  {
+    for (let i = 0; i < cmds.length; i++) {
+        cmds[i].state = 1
+        cmds[i].cmd = "on"
+        cmds[i].ir_state = on_state_24
+    }
+    const echo = { type: 'text', text: "收到開門指令" };
+    return client.replyMessage(event.replyToken, echo);
+
+  }else{
+    const echo = { type: 'text', text: "光舞一定成功\n已經成功" };
+    return client.replyMessage(event.replyToken, echo);
+  }
+
   //  // use reply API
-  //  return client.replyMessage(event.replyToken, echo);
   
 }
 
@@ -134,6 +147,8 @@ app.get('/switch/off',(req,res)=>{
   }
   res.send("")
 })
+
+
 
 app.get('/send',(req,res) =>{
     let message = {
